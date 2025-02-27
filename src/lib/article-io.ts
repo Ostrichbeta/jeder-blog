@@ -8,7 +8,7 @@ import { stackServerApp } from '@/stack';
 import { Team } from '@stackframe/stack';
 import { lookup } from 'ip-location-api';
 import { headers } from 'next/headers';
-import {logger} from './logger';
+import { logger } from './logger';
 
 /**
  * Ensures required directories exist at the specified paths.

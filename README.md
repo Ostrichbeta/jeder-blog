@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Jeder's Blog
+
+[![Next.js](https://img.shields.io/badge/Next.js-14.2.3-black?logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18.2.0-blue?logo=react)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.0-blueviolet?logo=tailwind-css)](https://tailwindcss.com/)
+
+A modern blog platform built with Next.js featuring advanced content management and geo-restriction capabilities.
+
+## Key Features
+
+✨ **Next.js Powered**  
+- App Router implementation
+- Server-side rendering (SSR) & Static site generation (SSG)
+- Optimized performance with React Server Components
+
+📝 **Markdown Content System**  
+- Write articles in Markdown format
+- Front matter support for metadata (title, date, tags, etc.)
+- Syntax highlighting for code blocks
+- Automatic table of contents generation
+
+🌍 **Geo-Blocking System**  
+- IP-based geographic restrictions
+- Allow/block specific regions
+- Real-time geolocation detection
+- Customizable access rules per article
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js 22+
+- npm 10+
 
+### Installation
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/Ostrichbeta/jeder-blog.git
+cd jeder-blog
+npm install
+npx next build
+npx next start
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
