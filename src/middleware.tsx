@@ -2,13 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stackServerApp } from './stack';
 
 export async function middleware(request: NextRequest) {
-    if (request.headers.get('x-forwarded-for') !== undefined) {
+    const requestHeaders = new Headers(request.headers);
+    if (requestHeaders.get('x-forwarded-for') !== undefined) {
         // Add geo data to request header
-        const userIP = (request.headers.get('x-forwarded-for') ?? '::1').toString().split(', ')[0];
-        request.headers.set('user-ip', userIP);
-
+        const userIP = (requestHeaders.get('x-forwarded-for') ?? '::1').toString().split(', ')[0];
+        requestHeaders.set('user-ip', userIP);
     }
-
 
     // Auth check
 
@@ -29,4 +28,13 @@ export async function middleware(request: NextRequest) {
     if (!(await isAdmin()) && (regexPattern.test(request.nextUrl.pathname) || request.nextUrl.searchParams.has('draft'))) {
         return NextResponse.redirect(new URL('/', request.url));
     }
+
+    // We must pass the headers!
+    const response = NextResponse.next({
+        request: {
+            headers: requestHeaders,
+        },
+    });
+
+    return response;
 }
