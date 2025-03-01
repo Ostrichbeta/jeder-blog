@@ -140,7 +140,18 @@ export async function getArticleList(tags?: string, checkDrafts: boolean = false
         logger.debug(userGEO);
 
         if (!userGEO) {
-            return [];
+            return (
+                tags === undefined
+                    ? collection
+                    : collection
+                          .filter((item: { filename: string; fields: MDField }) => [...item.fields.tags].includes(tags))
+                          .map((item) => {
+                              return {
+                                  filename: item.filename ?? '',
+                                  fields: item.fields! as MDField,
+                              };
+                          })
+            ).filter((item: { filename: string; fields: MDField }) => item.fields.geoAllow === undefined && item.fields.geoBlock === undefined);
         }
 
         return (
@@ -190,13 +201,10 @@ export async function getItem(filename: string, checkDrafts: boolean = false): P
         throw new Error('Unauthorized');
     }
 
-    if (!userGEO && !(await headers()).has('is-admin')) {
-        throw new Error('Unauthorized');
-    }
-
     const item = new FusionCollection().loadFromDir(articlePath).getOneByFilename(filename + '.md');
 
     if (!item) {
+        logger.info(`User from ${(await headers()).get('user-ip')} tried to access ${filename} threw an error: Not found`);
         throw new Error('Invalid item');
     }
 
@@ -207,12 +215,19 @@ export async function getItem(filename: string, checkDrafts: boolean = false): P
     if ((await headers()).has('is-admin')) {
         return { fields: item.getFields() as MDField, content: item.getContent() };
     } else {
+        if (!userGEO && (item.getField('geoAllow') !== undefined || item.getField('geoBlock') !== undefined)) {
+            logger.info(`User from ${(await headers()).get('user-ip')} tried to access ${filename} threw an error: No userGEO data while accessing GEO block page.`);
+            throw new Error('Invalid item');
+        }
+
         if (item.getField('geoBlock') && (item.getField('geoBlock') as string[]).find((item) => item.toLowerCase() === userGEO!.country!.toLowerCase()) !== undefined) {
-            throw new Error('Unauthorized');
+            logger.info(`User from ${(await headers()).get('user-ip')} tried to access ${filename} threw an error: geoBlock`);
+            throw new Error('Invalid item');
         }
 
         if (item.getField('geoAllow') && (item.getField('geoAllow') as string[]).find((item) => item.toLowerCase() === userGEO!.country!.toLowerCase()) === undefined) {
-            throw new Error('Unauthorized');
+            logger.info(`User from ${(await headers()).get('user-ip')} tried to access ${filename} threw an error: geoAllow`);
+            throw new Error('Invalid item');
         }
         return { fields: item.getFields() as MDField, content: item.getContent() };
     }

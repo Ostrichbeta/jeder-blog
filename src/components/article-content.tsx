@@ -83,7 +83,7 @@ export default function ArticleContent({ slug }: { slug: string }) {
                            prose-pre:bg-gray-100 dark:prose-pre:bg-gray-800
                            prose-pre:rounded-lg prose-pre:p-4
                            prose-img:rounded-xl prose-img:shadow-lg
-                           prose-ul:pl-8 prose-ol:pl-8 prose-li:my-1 prose-li:text-lg"
+                           prose-ul:pl-8 prose-ol:pl-8 prose-li:my-1 prose-li:text-lg mb-8"
             ></div>
         </article>
     );

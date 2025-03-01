@@ -31,7 +31,7 @@ export default function ArticleTOC({ children }: { children: React.ReactNode }) 
     }, [children]);
 
     return (
-        <Card className="top-20 p-4 mb-8 ml-8 w-80 max-h-[80vh] overflow-y-auto">
+        <Card className="top-20 p-4 mb-8 md:ml-8 w-full md:w-80 max-h-[80vh] overflow-y-auto">
             <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
                 <div className="flex items-center justify-between">
                     <h3 className="font-semibold">Table of Contents</h3>
