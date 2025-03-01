@@ -4,8 +4,6 @@ import FusionCollection from 'fusionable/FusionCollection';
 import path from 'path';
 import { checkMDField, MDField } from './article-check';
 import fs from 'fs';
-import { stackServerApp } from '@/stack';
-import { Team } from '@stackframe/stack';
 import { lookup } from 'ip-location-api';
 import { headers } from 'next/headers';
 import { logger } from './logger';
@@ -109,10 +107,7 @@ function formatMarkdownWithMetadata(metadata: MDField, content: string): string 
  * @throws Error if collection structure is invalid or data validation fails
  */
 export async function getArticleList(tags?: string, checkDrafts: boolean = false): Promise<{ filename: string; fields: MDField }[]> {
-    const user = await stackServerApp.getUser();
-    const userTeam: Team[] = (await user?.listTeams()) ?? [];
-
-    if (userTeam.find((item) => item.id === (process.env.SITE_ADMIN_TEAM_ID ?? '')) === undefined && checkDrafts) {
+    if (!(await headers()).has('is-admin') && checkDrafts) {
         throw new Error('Unauthorized');
     }
 
@@ -129,7 +124,7 @@ export async function getArticleList(tags?: string, checkDrafts: boolean = false
             throw new Error('Invalid data structure');
         }
     }
-    if (userTeam.find((item) => item.id === (process.env.SITE_ADMIN_TEAM_ID ?? '')) !== undefined) {
+    if ((await headers()).has('is-admin')) {
         return tags === undefined
             ? collection
             : collection
@@ -189,16 +184,13 @@ export async function getArticleList(tags?: string, checkDrafts: boolean = false
 export async function getItem(filename: string, checkDrafts: boolean = false): Promise<{ fields: MDField; content: string }> {
     const articlePath = path.join(process.cwd(), checkDrafts ? 'drafts' : 'raw_articles');
 
-    const user = await stackServerApp.getUser();
-    const userTeam: Team[] = (await user?.listTeams()) ?? [];
-
     const userGEO = await lookup((await headers()).get('user-ip') ?? '::1');
 
-    if (userTeam.find((item) => item.id === (process.env.SITE_ADMIN_TEAM_ID ?? '')) === undefined && checkDrafts) {
+    if (!(await headers()).has('is-admin') && checkDrafts) {
         throw new Error('Unauthorized');
     }
 
-    if (!userGEO && userTeam.find((item) => item.id === (process.env.SITE_ADMIN_TEAM_ID ?? '')) === undefined) {
+    if (!userGEO && !(await headers()).has('is-admin')) {
         throw new Error('Unauthorized');
     }
 
@@ -212,7 +204,7 @@ export async function getItem(filename: string, checkDrafts: boolean = false): P
         throw new Error('Invalid data structure');
     }
 
-    if (userTeam.find((item) => item.id === (process.env.SITE_ADMIN_TEAM_ID ?? '')) !== undefined) {
+    if ((await headers()).has('is-admin')) {
         return { fields: item.getFields() as MDField, content: item.getContent() };
     } else {
         if (item.getField('geoBlock') && (item.getField('geoBlock') as string[]).find((item) => item.toLowerCase() === userGEO!.country!.toLowerCase()) !== undefined) {
@@ -255,10 +247,7 @@ export async function getTagsList(checkDrafts: boolean = false): Promise<Record<
  */
 export async function saveArticle(filename: string, metadata: MDField, content: string, toDrafts: boolean = false) {
     try {
-        const user = await stackServerApp.getUser();
-        const userTeam: Team[] = (await user?.listTeams()) ?? [];
-
-        if (userTeam.find((item) => item.id === (process.env.SITE_ADMIN_TEAM_ID ?? '')) === undefined) {
+        if (!(await headers()).has('is-admin')) {
             throw new Error('Unauthorized');
         }
         const getCurrentDate = (): string => {
@@ -288,10 +277,7 @@ export async function saveArticle(filename: string, metadata: MDField, content: 
  */
 export async function deleteArticle(filename: string, fromDrafts: boolean = false) {
     try {
-        const user = await stackServerApp.getUser();
-        const userTeam: Team[] = (await user?.listTeams()) ?? [];
-
-        if (userTeam.find((item) => item.id === (process.env.SITE_ADMIN_TEAM_ID ?? '')) === undefined) {
+        if (!(await headers()).has('is-admin')) {
             throw new Error('Unauthorized');
         }
 

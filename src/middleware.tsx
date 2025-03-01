@@ -24,6 +24,10 @@ export async function middleware(request: NextRequest) {
         return false;
     };
 
+    if (await isAdmin()) {
+        requestHeaders.set('is-admin', 'true');
+    }
+
     const regexPattern = new RegExp('^\/articles\/([^ \/]*\/edit|create)$');
     if (!(await isAdmin()) && (regexPattern.test(request.nextUrl.pathname) || request.nextUrl.searchParams.has('draft'))) {
         return NextResponse.redirect(new URL('/', request.url));
