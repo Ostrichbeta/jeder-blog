@@ -26,6 +26,10 @@ export default async function ArticlesPage({ params, searchParams }: { params: P
     // Temporary values - replace with actual data from your CMS/markdown frontmatter
     try {
         const fileContent = await getItem((await params).filename, fromDrafts);
+        if (fileContent.content.startsWith('\n')) {
+            fileContent.content = fileContent.content.substring(1, fileContent.content.length);
+            // Remove the heading \n
+        }
 
         return (
             <div className="flex-1 flex flex-col py-8 w-full">
