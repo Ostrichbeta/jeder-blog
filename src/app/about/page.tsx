@@ -1,5 +1,6 @@
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: "About | Jeder's House",
