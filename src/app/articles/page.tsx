@@ -1,4 +1,10 @@
 import { ArticlesList } from '@/components/articles-list';
+import {Metadata} from 'next';
+
+export const metadata: Metadata = {
+    title: 'Articles List | Jeder\'s House',
+    description: 'Here are all the latest articles.'
+};
 
 export default async function ArticlesPage() {
     return (

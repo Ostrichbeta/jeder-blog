@@ -1,44 +1,23 @@
 'use client';
 
 import { MDField } from '@/lib/article-check';
-import { getItem } from '@/lib/article-io';
-import { useEffect, useState } from 'react';
 import Showdown from 'showdown';
 import ArticleTOC from './article-toc';
 import { Badge } from './ui/badge';
 import { Edit } from 'lucide-react';
 import { Button } from './ui/button';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useUser } from '@stackframe/stack';
 
-export default function ArticleContent({ slug }: { slug: string }) {
+export default function ArticleContent({ slug, isAdmin, mdField, mdContent }: { slug: string; isAdmin: boolean; mdField: MDField; mdContent: string }) {
     const searchParams = useSearchParams();
 
     // Authentication here, if the user is not superuser, ignore the drafts tag.
     const draftMode: boolean = searchParams.has('draft');
 
-    const [mdHTML, setMDHTML] = useState<string | null>('');
-    const [mdField, setMDField] = useState<MDField | null>(null);
-
-    const [isAdmin, setIsAdmin] = useState<boolean>(false);
-    const user = useUser();
-
     const router = useRouter();
 
-    useEffect(() => {
-        async function getArticleContent() {
-            if (user && (await user.listTeams()).find((item) => (item.id === (process.env.SITE_ADMIN_TEAM_ID ?? '')) !== undefined)) {
-                setIsAdmin(true);
-            }
-
-            const returnObj = await getItem(slug, draftMode);
-            setMDField(returnObj.fields);
-            const mdContent = returnObj.content;
-            const conv = new Showdown.Converter({ headerLevelStart: 2 });
-            setMDHTML(conv.makeHtml(mdContent));
-        }
-        getArticleContent();
-    }, [slug, draftMode, user]);
+    const conv = new Showdown.Converter({ headerLevelStart: 2 });
+    const mdHTML: string = conv.makeHtml(mdContent);
 
     return (
         <article className="px-2">

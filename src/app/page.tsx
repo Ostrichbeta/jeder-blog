@@ -42,15 +42,13 @@ export default async function Home() {
                                         <AvatarFallback>OC</AvatarFallback>
                                     </Avatar>
                                     <h2 className="text-3xl font-semibold">Ostrichbeta Chan</h2>
-                                    <s className='text-lg'>Definitly not Lolly</s>
+                                    <s className="text-lg">Definitly not Lolly</s>
                                 </div>
 
                                 {/* Right Column - Introduction */
                                 /* eslint-disable */}
                                 <div className="space-y-4 text-xl font-light leading-7">
-                                    <p>
-                                        Hello there! I'm Ostrichbeta Chan, currently residing in East Asia. I'm a passionate Switch and PC gamer.
-                                    </p>
+                                    <p>Hello there! I'm Ostrichbeta Chan, currently residing in East Asia. I'm a passionate Switch and PC gamer.</p>
                                     <p>
                                         As for my hobbies, I'm a coder and web developer. I create websites for fun, but I'm still learning the ropes with CSS. I'm more familiar with C++, TypeScript,
                                         and Python. Feel free to check out my

@@ -1,6 +1,11 @@
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 
+export const metadata: Metadata = {
+    title: "About | Jeder's House",
+    description: "Jeder's blog, created by Ostrichbeta Chan",
+};
+
 export default async function AboutPage() {
     return (
         <div className="max-w-4xl w-full mx-auto mt-8 px-5">
